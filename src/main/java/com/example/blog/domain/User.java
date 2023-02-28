@@ -23,8 +23,11 @@ public class User {
     @Column
     private String password;
 
-
-
+    public User( String userid, String username, String password) {
+        this.userid = userid;
+        this.username = username;
+        this.password = password;
+    }
 
     public Long getId() {
         return id;
