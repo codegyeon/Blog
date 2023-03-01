@@ -2,6 +2,7 @@ package com.example.blog.controller;
 
 import com.example.blog.Dto.SignUpRequestDto;
 import com.example.blog.Service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
@@ -20,6 +21,7 @@ public class UserController {
 
     private final UserService userService;
 
+    @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
     }
@@ -31,7 +33,7 @@ public class UserController {
 
             List<ObjectError> errorList = errors.getAllErrors(); // 모든 오류 정보 가져오기
             for (ObjectError error : errorList) {
-                model.addAttribute("errorMsg", error.getDefaultMessage()); // 오류 메시지를 errorMsg 속성에 추가
+                model.addAttribute("keys", error.getDefaultMessage()); // 오류 메시지를 errorMsg 속성에 추가
             }
             return "signup";
 
@@ -50,13 +52,15 @@ public class UserController {
         }
 
         // 이름과 비밀번호가 같을경우
-        if(SignUpRequestDto.getName().equals(SignUpRequestDto.getPassword())){
+        if(SignUpRequestDto.getId().equals(SignUpRequestDto.getPassword())){
             model.addAttribute("keys","아이디와 비밀번호는 같을 수 없습니다.");
             return "signup";
         }
 
 
         userService.registerUser(SignUpRequestDto);
+
+
         model.addAttribute("keys","회원가입 성공!");
 
 

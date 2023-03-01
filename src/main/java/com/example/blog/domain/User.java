@@ -1,9 +1,12 @@
 package com.example.blog.domain;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 // 테이블 설정
 @Entity
+@Table(name = "users")
 public class User {
 
     //기본키
@@ -22,6 +25,10 @@ public class User {
     //유저 패스워드
     @Column
     private String password;
+
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
+    private List<Post> posts = new ArrayList<>();
 
     public User( String userid, String username, String password) {
         this.userid = userid;

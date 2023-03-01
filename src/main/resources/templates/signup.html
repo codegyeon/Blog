@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>회원가입페이지</title>
@@ -52,9 +52,18 @@
         </div>
 
         <div class="input-group mb-3">
-            <span class="input-group-text" id="inputGroup-sizing-lg-2">Password</span>
+            <span class="input-group-text" id="inputGroup-sizing-lg-2">Re Password</span>
             <input type="password" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg" name="chekpassword">
         </div>
+
+        <script th:inline="javascript">
+            var message = [[${keys}]];
+
+            if (message != null){
+                alert(message);
+            }
+
+        </script>
 
         <button style="margin:10px auto; display: block;" class="btn btn-success">회원가입</button>
     </form>
