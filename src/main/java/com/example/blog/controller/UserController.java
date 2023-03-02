@@ -57,8 +57,13 @@ public class UserController {
             return "signup";
         }
 
+        try {
+            userService.registerUser(SignUpRequestDto);
+        }catch (Exception e){
+            model.addAttribute("keys","중복된 사용자 ID 가 존재합니다.");
+            return "signup";
+        }
 
-        userService.registerUser(SignUpRequestDto);
 
 
         model.addAttribute("keys","회원가입 성공!");
