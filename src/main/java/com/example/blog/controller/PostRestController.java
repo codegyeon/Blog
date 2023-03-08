@@ -3,45 +3,74 @@ package com.example.blog.controller;
 
 
 import com.example.blog.Repository.PostRepository;
+import com.example.blog.Repository.UserRepository;
+import com.example.blog.Security.UserDetailsImpl;
 import com.example.blog.domain.Post;
 import com.example.blog.Dto.PostRequestDto;
+import com.example.blog.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @RestController
 public class PostRestController {
     private final PostRepository postRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public PostRestController(PostRepository postRepository){
+    public PostRestController(PostRepository postRepository, UserRepository userRepository){
         this.postRepository= postRepository;
+        this.userRepository = userRepository;
     }
 
 
     //게시글 목록
     @GetMapping("/api/postlist")
-    public List<Post> getpost(){
+    public List<Post> getPost(){
         return postRepository.findAll();
     }
 
+    //게시글 상세페이지
+    @GetMapping("/api/blog/detail/{id}")
+    public Post detailPost(@PathVariable Long id){
+        Post post = postRepository.findById(id).orElseThrow(
+                ()->new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
+        return post;
+    }
+
+
+
+
     //게시글 작성
     @PostMapping("/api/blog/write")
-    public Post createpost(@RequestBody PostRequestDto postRequestDto){
-        Post post = new Post(postRequestDto);
+    public Post createPost(@RequestBody PostRequestDto postRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        String username = userDetails.getUsername();
 
         //로그인 한 유저의 이름을 넣을 postREquestDto.setName 이 필요.
+        postRequestDto.setUsername(username);
+        User user = userRepository.findByUserid(username).orElseThrow(
+                ()->new IllegalArgumentException("userId가 존재하지 않습니다."));
+
+
+
+        Post post = new Post(postRequestDto);
+        post.setUser(user);
 
 
         return postRepository.save(post);
     }
 
-    //게시글 댓글
+    //게시글 수정
+    @PatchMapping("/api/blog/modify/{id}")
+    public Post modifyPost (@PathVariable Long id, @RequestBody PostRequestDto postRequestDto,@AuthenticationPrincipal UserDetailsImpl userDetails){
+
+
+    }
+    //게시글 삭제
 
 
 }

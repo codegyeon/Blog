@@ -34,30 +34,61 @@
             window.location.href = "/";
         }
 
+        function isValidContents(contents) {
+            if (contents == '') {
+                return false;
+            }
+            return true;
+        }
+
         //글쓰기 ajax
-        function
+        function writePost(){
+            let title = $('#exampleFormControlInput1').val();
+            let contents = $('#exampleFormControlTextarea1').val();
+
+            if (isValidContents(contents) == false) {
+                return alert('내용을 입력해주세요');;
+            }
+            if (isValidContents(title) == false) {
+                return alert('제목을 입력해주세요');;
+            }
+
+            let data = {'title' : title, 'contents' : contents}
+
+            $.ajax({
+                type: "POST",
+                url:"/api/blog/write",
+                contentType : "application/json",
+                data: JSON.stringify(data),
+                success: function(response){
+                    alert('메시지가 성공적으로 작성되었습니다.');
+                    mainPagerun();
+                }
+            });
+
+        }
     </script>
 
 </head>
 
 
 <body>
-    <h1 class="title_box" style="cursor: pointer;"  onclick="mainPagerun()"> Blog</h1>
+<h1 class="title_box" style="cursor: pointer;"  onclick="mainPagerun()"> Blog</h1>
 
-    <div>
-        <div class="mb-3">
-            <label for="exampleFormControlInput1" class="form-label">제목</label>
-            <input type="text" class="form-control" id="exampleFormControlInput1"
-                   placeholder="제목을 입력해주세요.">
-        </div>
-        <div class="mb-3">
-            <label for="exampleFormControlTextarea1" class="form-label">내용</label>
-            <input class="form-control1" type="text" id="exampleFormControlTextarea1"
-                      placeholder="내용을 입력해주세요">
-
-            <button style="margin:10px auto; display: block;" type="button" class="btn btn-success">작성하기</button>
-        </div>
+<div>
+    <div class="mb-3">
+        <label for="exampleFormControlInput1" class="form-label">제목</label>
+        <input type="text" class="form-control" id="exampleFormControlInput1"
+               placeholder="제목을 입력해주세요.">
     </div>
+    <div class="mb-3">
+        <label for="exampleFormControlTextarea1" class="form-label">내용</label>
+        <input class="form-control1" type="text" id="exampleFormControlTextarea1"
+               placeholder="내용을 입력해주세요">
+
+        <button style="margin:10px auto; display: block;" type="button" class="btn btn-success" onclick="writePost()">작성하기</button>
+    </div>
+</div>
 
 </body>
 </html>

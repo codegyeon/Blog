@@ -4,6 +4,15 @@ public class PostRequestDto {
     private String username;
     private String title;
     private String contents;
+    private UserRequestDto user;
+
+    public UserRequestDto getUser() {
+        return user;
+    }
+
+    public void setUser(UserRequestDto user) {
+        this.user = user;
+    }
 
     public String getUsername() {
         return username;

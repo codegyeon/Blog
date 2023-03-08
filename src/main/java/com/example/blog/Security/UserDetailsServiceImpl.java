@@ -1,7 +1,6 @@
 package com.example.blog.Security;
 
 import com.example.blog.Repository.UserRepository;
-import com.example.blog.Service.UserService;
 import com.example.blog.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
