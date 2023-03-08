@@ -36,7 +36,7 @@ public class PostRestController {
 
     //게시글 상세페이지
     @GetMapping("/api/blog/detail/{id}")
-    public Post detailPost(@PathVariable Long id){
+    public Post getDetailPost(@PathVariable Long id){
         Post post = postRepository.findById(id).orElseThrow(
                 ()->new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
         return post;
@@ -67,10 +67,13 @@ public class PostRestController {
     //게시글 수정
     @PatchMapping("/api/blog/modify/{id}")
     public Post modifyPost (@PathVariable Long id, @RequestBody PostRequestDto postRequestDto,@AuthenticationPrincipal UserDetailsImpl userDetails){
-
+        //TODO : 수정 , 삭제가 필요
 
     }
     //게시글 삭제
+    @DeleteMapping("/api/blog/delete/{id}")
+    public boolean deletePost (@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
 
+    }
 
 }
