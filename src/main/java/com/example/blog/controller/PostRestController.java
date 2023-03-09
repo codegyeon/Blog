@@ -52,8 +52,8 @@ public class PostRestController {
 
         //로그인 한 유저의 이름을 넣을 postREquestDto.setName 이 필요.
         postRequestDto.setUsername(username);
-        User user = userRepository.findByUserid(username).orElseThrow(
-                ()->new IllegalArgumentException("userId가 존재하지 않습니다."));
+        User user = userRepository.findByUsername(username).orElseThrow(
+                ()->new IllegalArgumentException("UserName 이 존재하지 않습니다."));
 
 
 

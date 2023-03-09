@@ -53,6 +53,7 @@ public class SecurityConfiguration {
                         //로그인 설정
                         .formLogin()
                         .loginPage("/login")
+                        .usernameParameter("id")
                         .loginProcessingUrl("/login")
                         .defaultSuccessUrl("/")
                         .failureUrl("/login?error")
