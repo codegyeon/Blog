@@ -7,7 +7,7 @@ import java.util.List;
 // 테이블 설정
 @Entity
 @Table(name = "users")
-public class User {
+public class UserAccount {
 
     //기본키
     @Id
@@ -30,13 +30,13 @@ public class User {
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private List<Post> posts = new ArrayList<>();
 
-    public User( String userid, String username, String password) {
+    public UserAccount( String userid, String username, String password) {
         this.userid = userid;
         this.username = username;
         this.password = password;
     }
 
-    public User() {
+    public UserAccount() {
 
     }
 

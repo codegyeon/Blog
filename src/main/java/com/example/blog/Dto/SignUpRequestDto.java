@@ -35,8 +35,7 @@ public class SignUpRequestDto {
     private String password;
 
 
-
     @NotBlank(message = "2차 비밀번호는 필수 입력 값입니다.")
-    private String chekpassword;
+    private String checkedpassword;
 
 }

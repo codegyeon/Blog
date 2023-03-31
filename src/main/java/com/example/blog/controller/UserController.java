@@ -46,7 +46,7 @@ public class UserController {
         }
 
         // 1차 비밀번호와 2차 비밀번호가 다를경우
-        if(!SignUpRequestDto.getPassword().equals(SignUpRequestDto.getChekpassword())){
+        if(!SignUpRequestDto.getPassword().equals(SignUpRequestDto.getCheckedpassword())){
             model.addAttribute("keys" , "비밀번호가 다릅니다..");
             return "signup";
         }

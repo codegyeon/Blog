@@ -1,6 +1,7 @@
 package com.example.blog.Security;
 
-import com.example.blog.domain.User;
+
+import com.example.blog.domain.UserAccount;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -8,9 +9,9 @@ import java.util.Collection;
 
 public class UserDetailsImpl implements UserDetails {
 
-    private User user;
+    private UserAccount user;
 
-    public UserDetailsImpl(User user) {
+    public UserDetailsImpl(UserAccount user) {
         this.user = user;
     }
 

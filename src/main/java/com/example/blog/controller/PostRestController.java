@@ -7,7 +7,7 @@ import com.example.blog.Repository.UserRepository;
 import com.example.blog.Security.UserDetailsImpl;
 import com.example.blog.domain.Post;
 import com.example.blog.Dto.PostRequestDto;
-import com.example.blog.domain.User;
+import com.example.blog.domain.UserAccount;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -52,7 +52,7 @@ public class PostRestController {
 
         //로그인 한 유저의 이름을 넣을 postREquestDto.setName 이 필요.
         postRequestDto.setUsername(username);
-        User user = userRepository.findByUsername(username).orElseThrow(
+        UserAccount user = userRepository.findByUsername(username).orElseThrow(
                 ()->new IllegalArgumentException("UserName 이 존재하지 않습니다."));
 
 

@@ -28,13 +28,13 @@ public class Post {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private User user;
+    private UserAccount user;
 
     @OneToMany(mappedBy = "post",cascade = CascadeType.ALL)
     private List<Replies> replies = new ArrayList<>();
 
 
-    public void setUser(User user) {
+    public void setUser(UserAccount user) {
         this.user = user;
     }
 
