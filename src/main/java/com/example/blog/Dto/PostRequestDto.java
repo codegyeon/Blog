@@ -1,7 +1,7 @@
 package com.example.blog.Dto;
 
 public class PostRequestDto {
-    private String username;
+    private String nickname;
     private String title;
     private String contents;
     private UserRequestDto user;
@@ -14,12 +14,12 @@ public class PostRequestDto {
         this.user = user;
     }
 
-    public String getUsername() {
-        return username;
+    public String getNickname() {
+        return nickname;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public String getTitle() {

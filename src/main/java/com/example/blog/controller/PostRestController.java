@@ -13,7 +13,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 
 @RestController
@@ -50,9 +49,9 @@ public class PostRestController {
     public Post createPost(@RequestBody PostRequestDto postRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
         String username = userDetails.getUsername();
 
-        //로그인 한 유저의 이름을 넣을 postREquestDto.setName 이 필요.
-        postRequestDto.setUsername(username);
-        UserAccount user = userRepository.findByUsername(username).orElseThrow(
+        //로그인 한 유저의 이름을 넣을 postRequestDto.setName 이 필요.
+        postRequestDto.setNickname(username);
+        UserAccount user = userRepository.findByNickname(username).orElseThrow(
                 ()->new IllegalArgumentException("UserName 이 존재하지 않습니다."));
 
 
@@ -68,12 +67,23 @@ public class PostRestController {
     @PatchMapping("/api/blog/modify/{id}")
     public Post modifyPost (@PathVariable Long id, @RequestBody PostRequestDto postRequestDto,@AuthenticationPrincipal UserDetailsImpl userDetails){
         //TODO : 수정 , 삭제가 필요
-
+        if (userDetails.getUsername() != postRequestDto.getNickname()){
+            throw new IllegalArgumentException("작성자만이 수정할 수 있습니다.");
+        }
+        Post post = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
+        post.setTitle(postRequestDto.getTitle());
+        post.setContents(postRequestDto.getContents());
+        return postRepository.save(post);
     }
     //게시글 삭제
     @DeleteMapping("/api/blog/delete/{id}")
     public boolean deletePost (@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
-
+        String name = postRepository.findById(id).get().getNickname();
+        if (userDetails.getUsername() != name){
+            throw new IllegalArgumentException("작성자만이 삭제할 수 있습니다.");
+        }
+        postRepository.deleteById(id);
+        return true;
     }
 
 }

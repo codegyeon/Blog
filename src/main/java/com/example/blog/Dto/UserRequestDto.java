@@ -2,17 +2,9 @@ package com.example.blog.Dto;
 
 
 public class UserRequestDto {
-    private String userid;
     private String username;
+    private String nickname;
     private String password;
-
-    public String getUserid() {
-        return userid;
-    }
-
-    public void setUserid(String userid) {
-        this.userid = userid;
-    }
 
     public String getUsername() {
         return username;
@@ -20,6 +12,14 @@ public class UserRequestDto {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public String getPassword() {

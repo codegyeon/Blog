@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+
     <title>메인페이지</title>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -51,18 +52,18 @@
                         let post = response[i];
                         let id = post.id;
                         let title = post.title;
-                        let name = post.name;
-                        let contents = contents;
-                        addHTML(id,title,name,contents);
+                        let nickname = post.nickname;
+                        let contents = post.contents;
+                        addHTML(id,title,nickname,contents);
                     }
                 }
             })
         }
 
-        function addHTML(id,title,name,contents){
+        function addHTML(id,title,nickname,contents){
             let tempHtml = `<div class="card" style="width: 50rem;margin: auto; margin-bottom:25px">
                                 <div class="card-header">
-                                    ${id}.${name}
+                                    ${id}.${nickname}
                                 </div>
                                 <div class="card-body">
                                     <h5 class="card-title">${title}</h5>
@@ -77,10 +78,11 @@
 
 </head>
 <body>
+    <span th:text="${username}"></span> 님의
     <h1 class="title_box" style="cursor: pointer;"  onclick="mainPagerun()"> Blog</h1>
 
     <div  style="margin: auto; width: 70px;">
-        <button type="button" onclick="postPagerun()" class="btn btn-secondary">글쓰기</button>
+        <button type="button" onclick="writePagerun()" class="btn btn-secondary">글쓰기</button>
     </div>
 
     <div id="card_main" style="margin: auto;">

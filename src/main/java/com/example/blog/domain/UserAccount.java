@@ -6,7 +6,6 @@ import java.util.List;
 
 // 테이블 설정
 @Entity
-@Table(name = "users")
 public class UserAccount {
 
     //기본키
@@ -16,24 +15,29 @@ public class UserAccount {
 
     //유저 아이디
     @Column
-    private String userid;
+    private String username;
 
     //유저 닉네임
     @Column
-    private String username;
+    private String nickname;
 
     //유저 패스워드
     @Column
     private String password;
 
+    @Column
+    @Enumerated(value = EnumType.STRING)
+    private UserRoleEnum role;
+
 
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private List<Post> posts = new ArrayList<>();
 
-    public UserAccount( String userid, String username, String password) {
-        this.userid = userid;
+    public UserAccount(String username, String nickname, String password, UserRoleEnum role) {
         this.username = username;
+        this.nickname = nickname;
         this.password = password;
+        this.role = role;
     }
 
     public UserAccount() {
@@ -44,32 +48,16 @@ public class UserAccount {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
+    public String getNickname() {
+        return nickname;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getUserid() {
-        return userid;
-    }
-
-    public void setUserid(String userid) {
-        this.userid = userid;
+    public String getUsername() {
+        return username;
     }
 
 }

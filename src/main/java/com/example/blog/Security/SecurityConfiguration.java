@@ -29,9 +29,10 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf().ignoringAntMatchers("/signup/**");
+        http.csrf()
+                .disable();
 
-                http
+         return http
                 .authorizeRequests()
 
 
@@ -53,10 +54,9 @@ public class SecurityConfiguration {
                         //로그인 설정
                         .formLogin()
                         .loginPage("/login")
-                        .usernameParameter("id")
                         .loginProcessingUrl("/login")
                         .defaultSuccessUrl("/")
-                        .failureUrl("/login?error")
+                        .failureUrl("/user/login?error")
                         .permitAll()
                 //------------------------------------------
 
@@ -75,12 +75,14 @@ public class SecurityConfiguration {
                         //예외처리 구성을 설정하는 메소드
                         .exceptionHandling()
                         // "접근 불가" 페이지 URL 설정
-                        .accessDeniedPage("/forbidden.html");
+                        .accessDeniedPage("/forbidden.html")
+
+                 .and()
+                 .build();
 
 
 
 
-        return http.build();
     }
 
 

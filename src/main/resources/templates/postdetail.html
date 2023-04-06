@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>게시글 상세 페이지</title>
@@ -29,35 +29,39 @@
         })
 
         function getMessages(){
-
-            $('#card text-center').empty();
+            let url = new URL(window.location.href);
+            let id = url.pathname.split('/').pop();
+            $('#card_main').empty();
 
             $.ajax({
                 type:'GET',
-                url:'/api/blog/detail/{id}',
+                url:`/api/blog/detail/${id}`,
                 success:function(response){
                         let post = response;
                         let id = post.id;
                         let title = post.title;
-                        let username = post.username;
+                        let nickname = post.nickname;
                         let contents = post.contents;
-                        addHTML(id,title,username,contents);
+                        addHTML(id,title,nickname,contents);
 
                 }
             })
         }
 
-        function addHTML(id,title,username,contents){
-            let tempHtml = `<div class="card-header">
-                                ${username}
+        function addHTML(id,title,nickname,contents){
+            let tempHtml = `
+            <div class="card text-center">
+            <div class="card-header">
+                                ${nickname}
                             </div>
                             <div class="card-body">
                                 <h5 class="card-title">${title}</h5>
                                 <p class="card-text">${contents}</p>
                                 <a href="/api/blog/modify/${id}" class="btn btn-primary">수정하기</a>
                                 <a href="/api/blog/delete/${id}" class="btn btn-primary">삭제하기</a>
+                            </div>
                             </div>`;
-            $('#card text-center').append(tempHtml);
+            $('#card_main').append(tempHtml);
         }
 
     </script>
@@ -65,17 +69,20 @@
 
 </head>
 <body>
+    <span th:text="${username}"></span> 님의
     <h1 class="title_box" style="cursor: pointer;"  onclick="mainPageRun()"> Blog</h1>
 
-    <div class="card text-center">
-        <div class="card-header">
-            글쓴이
-        </div>
-        <div class="card-body">
-            <h5 class="card-title">제목</h5>
-            <p class="card-text">내용</p>
-            <a href="/postdetail/${id}" class="btn btn-primary">수정하기</a>
-            <a href="/postdetail/${id}" class="btn btn-primary">삭제하기</a>
+    <div id="card_main" style="margin: auto;">
+        <div class="card text-center">
+            <div class="card-header">
+                글쓴이
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">제목</h5>
+                <p class="card-text">내용</p>
+                <a href="/postdetail/${id}" class="btn btn-primary">수정하기</a>
+                <a href="/postdetail/${id}" class="btn btn-primary">삭제하기</a>
+            </div>
         </div>
     </div>
 

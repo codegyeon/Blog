@@ -1,6 +1,7 @@
 package com.example.blog.domain;
 
 import com.example.blog.Dto.PostRequestDto;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -15,24 +16,28 @@ public class Post {
     private Long id;
 
     //글 제목
+    @Setter
     @Column
     private String title;
 
     //글쓴이
     @Column
-    private String username;
+    private String nickname;
 
     //글내용
+    @Setter
     @Column
     private String contents;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "userAccount_id")
     private UserAccount user;
 
     @OneToMany(mappedBy = "post",cascade = CascadeType.ALL)
     private List<Replies> replies = new ArrayList<>();
 
+    public Post() {
+    }
 
     public void setUser(UserAccount user) {
         this.user = user;
@@ -43,37 +48,21 @@ public class Post {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
+    public String getNickname() {
+        return nickname;
     }
 
     public String getContents() {
         return contents;
     }
 
-    public void setContents(String contents) {
-        this.contents = contents;
-    }
-
     public Post(PostRequestDto postRequestDto){
         this.title = postRequestDto.getTitle();
-        this.username = postRequestDto.getUsername();
+        this.nickname = postRequestDto.getNickname();
         this.contents = postRequestDto.getContents();
     }
 }

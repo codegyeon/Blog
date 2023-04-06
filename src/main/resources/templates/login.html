@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>로그인페이지</title>
@@ -30,7 +30,7 @@
 
         <div class="input-group mb-3">
             <span class="input-group-text" id="inputGroup-sizing-default">ID</span>
-            <input type="text" class="form-control" name="id" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+            <input type="text" class="form-control" name="username" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
         </div>
 
         <div class="input-group mb-3">
@@ -41,5 +41,15 @@
 
         <button style="margin:10px auto; display: block;" class="btn btn-success">로그인하기</button>
     </form>
+    <div id="login-failed" style="display:none" class="alert alert-danger" role="alert">로그인에 실패하였습니다.</div>
 </body>
+
+<script>
+    const href = location.href;
+    const queryString = href.substring(href.indexOf("?")+1)
+    if (queryString === 'error') {
+        const errorDiv = document.getElementById('login-failed');
+        errorDiv.style.display = 'block';
+    }
+</script>
 </html>

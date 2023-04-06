@@ -23,7 +23,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     // 사용자의 이름을 인자로 받아와서 해당 사용자의 인증 정보를 조회하고, 이를 'UserDetails' 로 반환
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserAccount user = userRepository.findByUserid(username)
+        UserAccount user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Can't find " + username));
 
         return new UserDetailsImpl(user);

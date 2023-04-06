@@ -36,13 +36,6 @@ public class UserController {
                 model.addAttribute("keys", error.getDefaultMessage()); // 오류 메시지를 errorMsg 속성에 추가
             }
             return "signup";
-
-//            Map<String, String> validatorResult = new HashMap<>();
-//            for (FieldError error : errors.getFieldErrors()) {
-//                String validKeyName = String.format("valid_%s", error.getField());
-//                validatorResult.put(validKeyName, error.getDefaultMessage());
-//            }
-//            model.addAttribute("keys", validatorResult);
         }
 
         // 1차 비밀번호와 2차 비밀번호가 다를경우
@@ -52,7 +45,7 @@ public class UserController {
         }
 
         // 이름과 비밀번호가 같을경우
-        if(SignUpRequestDto.getId().equals(SignUpRequestDto.getPassword())){
+        if(SignUpRequestDto.getUsername().equals(SignUpRequestDto.getPassword())){
             model.addAttribute("keys","아이디와 비밀번호는 같을 수 없습니다.");
             return "signup";
         }

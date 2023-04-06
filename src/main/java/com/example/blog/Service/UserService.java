@@ -3,6 +3,7 @@ package com.example.blog.Service;
 import com.example.blog.Repository.UserRepository;
 
 import com.example.blog.domain.UserAccount;
+import com.example.blog.domain.UserRoleEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -28,20 +29,22 @@ public class UserService {
 
     public void registerUser(SignUpRequestDto requestDto) {
         // 회원 ID 중복 확인
-        String userid = requestDto.getId();
-        Optional<UserAccount> found = userRepository.findByUserid(userid);
+        String username = requestDto.getUsername();
+        Optional<UserAccount> found = userRepository.findByUsername(username);
         if (found.isPresent()) {
             throw new IllegalArgumentException("중복된 사용자 ID 가 존재합니다.");
         }
-        String username = requestDto.getName();
+        String nickname = requestDto.getNickname();
 
         // 패스워드 암호화
         String password = passwordEncoder.encode(requestDto.getPassword());
 
+        //권한 설정
+        UserRoleEnum role = UserRoleEnum.USER;
 
 
 
-        UserAccount user = new UserAccount(userid, username,password );
+        UserAccount user = new UserAccount(username,nickname,password,role );
         userRepository.save(user);
     }
 }

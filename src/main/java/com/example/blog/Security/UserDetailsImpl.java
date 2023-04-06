@@ -3,8 +3,10 @@ package com.example.blog.Security;
 
 import com.example.blog.domain.UserAccount;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 public class UserDetailsImpl implements UserDetails {
@@ -18,7 +20,11 @@ public class UserDetailsImpl implements UserDetails {
     //사용자의 권한 정보를 리턴
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        SimpleGrantedAuthority adminAuthority = new SimpleGrantedAuthority("ROLE_USER");
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(adminAuthority);
+
+        return authorities;
     }
 
     @Override
@@ -30,7 +36,7 @@ public class UserDetailsImpl implements UserDetails {
     @Override
     // 사용자의 이름을 리턴
     public String getUsername() {
-        return user.getUsername();
+        return user.getNickname();
     }
 
     @Override
