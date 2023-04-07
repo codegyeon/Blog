@@ -21,6 +21,7 @@ public class Post {
     private String title;
 
     //글쓴이
+    @Setter
     @Column
     private String nickname;
 

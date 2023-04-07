@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>수정페이지</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+    <style>
+        .title_box{
+            margin: 50px auto;
+            display: block;
+            background-color: indianred;
+            text-align: center;
+        }
+        .mb-3{
+            width: 500px;
+            display: block;
+            position: center;
+            margin: auto;
+        }
+        .form-control1{
+            width: 500px;
+            height: 600px;
+
+        }
+    </style>
+
+    <script>
+        function mainPagerun(){
+            window.location.href = "/";
+        }
+
+        function isValidContents(contents) {
+            if (contents == '') {
+                return false;
+            }
+            return true;
+        }
+
+        $(document).ready(function () {
+            // HTML 문서를 로드할 때마다 실행합니다.-->
+            getMessages();
+        })
+
+        //수정하기전 불러오기
+
+        function getMessages(){
+            let url = new URL(window.location.href);
+            let id = url.pathname.split('/').pop();
+            $('#maincard').empty();
+
+            $.ajax({
+                type:'GET',
+                url:`/api/blog/detail/${id}`,
+                success:function(response){
+                        let post = response;
+                        let title = post.title;
+                        let contents = post.contents;
+                        addHTML(title,contents);
+
+                }
+            })
+        }
+
+        function addHTML(title,contents){
+            let tempHtml = `<div class="mb-3">
+                                <label for="exampleFormControlInput1" class="form-label">제목</label>
+                                <input type="text" class="form-control" id="exampleFormControlInput1"
+                                value="${title}">
+                            </div>
+                            <div class="mb-3">
+                                <label for="exampleFormControlTextarea1" class="form-label">내용</label>
+                                <input class="form-control1" type="text" id="exampleFormControlTextarea1"
+                                value="${contents}">
+
+                                <button style="margin:10px auto; display: block;" type="button" class="btn btn-success" onclick="writePost()">수정하기</button>
+                            </div>`;
+            $('#maincard').append(tempHtml);
+        }
+
+
+        //글수정하기 ajax
+        function writePost(){
+            let title = $('#exampleFormControlInput1').val();
+            let contents = $('#exampleFormControlTextarea1').val();
+            let url = new URL(window.location.href);
+            let id = url.pathname.split('/').pop();
+
+            if (isValidContents(contents) == false) {
+                return alert('내용을 입력해주세요');;
+            }
+            if (isValidContents(title) == false) {
+                return alert('제목을 입력해주세요');;
+            }
+
+            let data = {'title' : title, 'contents' : contents}
+
+            $.ajax({
+                type: "PATCH",
+                url:`/api/blog/modify/${id}`,
+                contentType : "application/json",
+                data: JSON.stringify(data),
+                success: function(response){
+                    alert('게시글이 성공적으로 수정되었습니다.');
+                    mainPagerun();
+                }
+            });
+
+        }
+    </script>
+
+</head>
+
+
+<body>
+<h1 class="title_box" style="cursor: pointer;"  onclick="mainPagerun()"> Blog</h1>
+
+<div id="maincard">
+    <div class="mb-3">
+        <label for="exampleFormControlInput1" class="form-label">제목</label>
+        <input type="text" class="form-control" id="exampleFormControlInput1"
+               placeholder="제목을 입력해주세요.">
+    </div>
+    <div class="mb-3">
+        <label for="exampleFormControlTextarea1" class="form-label">내용</label>
+        <input class="form-control1" type="text" id="exampleFormControlTextarea1"
+               placeholder="내용을 입력해주세요">
+
+        <button style="margin:10px auto; display: block;" type="button" class="btn btn-success" onclick="writePost()">작성하기</button>
+    </div>
+</div>
+
+</body>
+</html>

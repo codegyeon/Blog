@@ -57,13 +57,24 @@
                             <div class="card-body">
                                 <h5 class="card-title">${title}</h5>
                                 <p class="card-text">${contents}</p>
-                                <a href="/api/blog/modify/${id}" class="btn btn-primary">수정하기</a>
-                                <a href="/api/blog/delete/${id}" class="btn btn-primary">삭제하기</a>
+                                <a href="/postmodify/${id}" class="btn btn-primary">수정하기</a>
+                                <a onclick="getDelete(${id})" class="btn btn-primary">삭제하기</a>
                             </div>
                             </div>`;
             $('#card_main').append(tempHtml);
         }
 
+        //게시글 삭제 호출
+        function getDelete(id){
+            $.ajax({
+                type:'DELETE',
+                url:`/api/blog/delete/${id}`,
+                success:function(response){
+                        alert("해당 게시글이 삭제되었습니다.");
+                        mainPageRun();
+                }
+            })
+        }
     </script>
 
 
@@ -80,7 +91,7 @@
             <div class="card-body">
                 <h5 class="card-title">제목</h5>
                 <p class="card-text">내용</p>
-                <a href="/postdetail/${id}" class="btn btn-primary">수정하기</a>
+                <a href="/postmodify/${id}" class="btn btn-primary">수정하기</a>
                 <a href="/postdetail/${id}" class="btn btn-primary">삭제하기</a>
             </div>
         </div>

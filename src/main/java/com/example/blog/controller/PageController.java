@@ -1,15 +1,26 @@
 package com.example.blog.controller;
 
 
+import com.example.blog.Repository.PostRepository;
 import com.example.blog.Security.UserDetailsImpl;
+import com.example.blog.domain.Post;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 
 @Controller
 public class PageController {
+    private final PostRepository postRepository;
+
+    @Autowired
+    public PageController(PostRepository postRepository) {
+        this.postRepository = postRepository;
+    }
+
 
     //메인페이지
     @GetMapping("/")
@@ -28,6 +39,19 @@ public class PageController {
     public String postdetail(@AuthenticationPrincipal UserDetailsImpl userDetails, Model model){
         model.addAttribute("username",userDetails.getUsername());
         return "postdetail";
+    }
+
+    //게시글 수정 페이지
+    @GetMapping("/postmodify/{id}")
+    public String postmodify(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable Long id,Model model){
+        Post post = postRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
+        if (userDetails.getUsername() != post.getNickname()){
+            model.addAttribute("keys","자신의 게시글만 지울수 있습니다.");
+            return "redirect:/postdetail/"+id ;
+        }
+
+        return "postmodify";
     }
 
     //로그인 페이지

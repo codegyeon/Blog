@@ -62,6 +62,6 @@ public class UserController {
         model.addAttribute("keys","회원가입 성공!");
 
 
-        return "redirect:/login";
+        return "login";
     }
 }

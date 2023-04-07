@@ -66,11 +66,14 @@ public class PostRestController {
     //게시글 수정
     @PatchMapping("/api/blog/modify/{id}")
     public Post modifyPost (@PathVariable Long id, @RequestBody PostRequestDto postRequestDto,@AuthenticationPrincipal UserDetailsImpl userDetails){
-        //TODO : 수정 , 삭제가 필요
-        if (userDetails.getUsername() != postRequestDto.getNickname()){
+
+        Post post = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
+        if (userDetails.getUsername() != post.getNickname()){
             throw new IllegalArgumentException("작성자만이 수정할 수 있습니다.");
         }
-        Post post = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
+
+
+
         post.setTitle(postRequestDto.getTitle());
         post.setContents(postRequestDto.getContents());
         return postRepository.save(post);
