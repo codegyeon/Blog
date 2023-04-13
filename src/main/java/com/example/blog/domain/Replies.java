@@ -17,18 +17,26 @@ public class Replies {
 
     // 댓글 내용
     @Column
-    private String comments;
+    private String content;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id")
-    private Post post;
+    @JoinColumn(name = "comment_id")
+    private Comments comments;
 
-    public void setPost(Post post) {
-        this.post = post;
+    public Replies() {
     }
 
-    public Replies(String username, String comments) {
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public Replies(String username, String content) {
         this.username = username;
+        this.content = content;
+    }
+    public Replies(String username, String content, Comments comments) {
+        this.username = username;
+        this.content = content;
         this.comments = comments;
     }
 
@@ -40,8 +48,8 @@ public class Replies {
         return username;
     }
 
-    public String getComments() {
-        return comments;
+    public String getContent() {
+        return content;
     }
 
 

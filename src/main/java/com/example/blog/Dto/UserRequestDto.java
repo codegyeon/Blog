@@ -1,6 +1,10 @@
 package com.example.blog.Dto;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserRequestDto {
     private String username;
     private String nickname;

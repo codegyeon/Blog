@@ -19,6 +19,7 @@
 
     </style>
 
+<!--    상세 게시글 스크립트-->
     <script>
         function mainPageRun(){
             window.location.href = "/";
@@ -26,6 +27,7 @@
         $(document).ready(function () {
             // HTML 문서를 로드할 때마다 실행합니다.-->
             getMessages();
+            getComments();
         })
 
         function getMessages(){
@@ -77,12 +79,125 @@
         }
     </script>
 
+<!--    상세 게시글의 댓글 스크립트-->
+    <script>
+<!--    댓글 리스트 가져오기 -->
+        function getComments(){
+        let url = new URL(window.location.href);
+        let id = url.pathname.split('/').pop();
+        $('#comment_main').empty();
+
+        $.ajax({
+            type:'GET',
+            url:`/api/blog/detail/${id}/comments`,
+            success:function(response){
+                for(let i = 0; i<response.length; i++){
+                        let comments= response[i];
+                        let id = comments.id;
+                        let username = comments.username;
+                        let content = comments.content;
+                        addHTML2(id,username,content);
+                    }
+
+            }
+        })
+    }
+
+    function addHTML2(id,username,content){
+        let tempHtml = `
+                <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..."></div>
+                <div class="ms-3">
+                    <div class="fw-bold">${username}</div>
+                    ${content}
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end" style="position: absolute;">
+                            <button  style="height: 20px;font-size: 1px;"type="button"  onclick="commentmodify(${id})">수정</button>
+                            <button style=" height: 20px;font-size: 1px;" type="button" onclick="commentdelete(${id})">삭제</button>
+                        </div>
+                        <div class="d-flex mt-4" id="replie_main">
+                        </div>
+                </div>`;
+        $('#comment_main').append(tempHtml);
+    }
+    function isValidContents(contents) {
+            if (contents == '') {
+                return false;
+            }
+            return true;
+    }
+
+
+<!--댓글 작성-->
+    function writeComment(){
+            let content = $('#exampleTextarea1').val();
+            if (isValidContents(content) == false) {
+                return alert('내용을 입력해주세요');;
+            }
+            let url = new URL(window.location.href);
+            let id = url.pathname.split('/').pop();
+
+            let data = {'content' : content}
+
+            $.ajax({
+                type: "POST",
+                url:`/api/blog/detail/${id}/comments`,
+                contentType : "application/json",
+                data: JSON.stringify(data),
+                success: function(response){
+                    alert('메시지가 성공적으로 작성되었습니다.');
+                    location.reload();
+                }
+            });
+    }
+
+
+    //댓글 삭제 호출
+    function commentdelete(id){
+                $.ajax({
+                    type:'DELETE',
+                    url:`/api/blog/detail/${id}/delete`,
+                    success:function(response){
+                            alert("해당 댓글이 삭제되었습니다.");
+                            location.reload();
+                    }
+                });
+    }
+
+<!--댓글 수정 -->
+    function commentmodify(id){
+
+            let content = $('#message-text').val();
+
+
+            if (isValidContents(content) == false) {
+                return alert('내용을 입력해주세요');;
+            }
+
+
+            let data = {'content' : content}
+
+            $.ajax({
+                type: "PATCH",
+                url:`/api/blog/detail/${id}/modify`,
+                contentType : "application/json",
+                data: JSON.stringify(data),
+                success: function(response){
+                    alert('댓글이 성공적으로 수정되었습니다.');
+                    location.reload();
+                }
+            });
+
+    }
+
+
+
+    </script>
 
 </head>
 <body>
     <span th:text="${username}"></span> 님의
     <h1 class="title_box" style="cursor: pointer;"  onclick="mainPageRun()"> Blog</h1>
 
+    <!--게시글 내용-->
     <div id="card_main" style="margin: auto;">
         <div class="card text-center">
             <div class="card-header">
@@ -97,7 +212,68 @@
         </div>
     </div>
 
+    <!--댓글 목록과 쓰기-->
+    <section class="mb-5">
+        <div class="card bg-light" >
+            <div class="card-body">
+                <!-- Comment form-->
+                <form class="mb-4">
+                    <textarea class="form-control" rows="3" placeholder="Join the discussion and leave a comment!" id="exampleTextarea1"></textarea>
+                    <button style="margin:10px auto; display: block;" type="button" class="btn btn-success" onclick="writeComment()">작성하기</button>
+                </form>
+                <!-- Comment with nested comments-->
+                <div class="d-flex mb-4" id="comment_main">
+                    <!-- Parent comment-->
+                    <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..."></div>
+                    <div class="ms-3">
+                        <div class="fw-bold">작성자</div>
+                        댓글 본문
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end" style="position: absolute;">
+                            <button  style="height: 20px;font-size: 1px;"type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">수정</button>
+                            <button style=" height: 20px;font-size: 1px;" type="button">삭제</button>
+                        </div>
+                        <!-- Child comment 1-->
+                        <div class="d-flex mt-4">
+                            <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..."></div>
+                            <div class="ms-3">
+                                <div class="fw-bold">Commenter Name</div>
+                                And under those conditions, you cannot establish a capital-market evaluation of that enterprise. You can't get investors.
+                                <div class="d-grid gap-2 d-md-flex justify-content-md-end" style="position: absolute;">
+                                    <button  style="height: 20px;font-size: 1px;"type="button" >수정</button>
+                                    <button style=" height: 20px;font-size: 1px;" type="button">삭제</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
+<!-- 수정 모달 -->
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">댓글 수정용 모달</button>
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="message-text" class="col-form-label">Message:</label>
+                            <textarea class="form-control" id="message-text"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+                    <button type="button" class="btn btn-primary" >수정하기</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </body>
 </html>

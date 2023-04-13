@@ -1,5 +1,10 @@
 package com.example.blog.Dto;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
+@AllArgsConstructor
+@NoArgsConstructor
 public class PostRequestDto {
     private String nickname;
     private String title;

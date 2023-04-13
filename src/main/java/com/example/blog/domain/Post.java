@@ -10,6 +10,7 @@ import java.util.List;
 @Entity
 public class Post {
 
+
     //기본키
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -35,7 +36,11 @@ public class Post {
     private UserAccount user;
 
     @OneToMany(mappedBy = "post",cascade = CascadeType.ALL)
-    private List<Replies> replies = new ArrayList<>();
+    private List<Comments> comments = new ArrayList<>();
+
+    public List<Comments> getComments() {
+        return comments;
+    }
 
     public Post() {
     }
