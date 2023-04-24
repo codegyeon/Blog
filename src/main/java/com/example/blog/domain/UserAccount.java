@@ -1,10 +1,15 @@
 package com.example.blog.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 // 테이블 설정
+@Getter
 @Entity
 public class UserAccount {
 
@@ -29,9 +34,21 @@ public class UserAccount {
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 
+    //게시글
 
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private List<Post> posts = new ArrayList<>();
+
+    //댓글
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private List<Comments> comments = new ArrayList<>();
+
+    //대댓글
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private List<Replies> replies = new ArrayList<>();
+
 
     public UserAccount(String username, String nickname, String password, UserRoleEnum role) {
         this.username = username;
@@ -44,20 +61,5 @@ public class UserAccount {
 
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getUsername() {
-        return username;
-    }
 
 }

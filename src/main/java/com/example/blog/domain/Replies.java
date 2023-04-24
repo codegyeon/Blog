@@ -1,8 +1,18 @@
 package com.example.blog.domain;
 
 
-import javax.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.persistence.*;
+import java.time.LocalDateTime;
+
+@Getter
+@EntityListeners(AuditingEntityListener.class)
 @Entity
 public class Replies {
 
@@ -19,9 +29,30 @@ public class Replies {
     @Column
     private String content;
 
+    //댓글
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "comment_id")
     private Comments comments;
+
+    //유저
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private UserAccount user;
+
+    //생성일자
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @CreatedDate
+    @Column(nullable = false,updatable = false)
+    private LocalDateTime createdAt; // 생성일시
+
+
+    //수정일자
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @LastModifiedDate
+    @Column(nullable = false)
+    private LocalDateTime modifiedAt; // 수정일시
 
     public Replies() {
     }
@@ -39,21 +70,4 @@ public class Replies {
         this.content = content;
         this.comments = comments;
     }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-
-
-
-
 }

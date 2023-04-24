@@ -5,88 +5,71 @@ package com.example.blog.controller;
 import com.example.blog.Repository.PostRepository;
 import com.example.blog.Repository.UserRepository;
 import com.example.blog.Security.UserDetailsImpl;
+import com.example.blog.Service.PostService;
 import com.example.blog.domain.Post;
 import com.example.blog.Dto.PostRequestDto;
 import com.example.blog.domain.UserAccount;
+import com.example.blog.domain.type.SearchType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 
 @RestController
 public class PostRestController {
-    private final PostRepository postRepository;
-    private final UserRepository userRepository;
+    private final PostService postService;
 
     @Autowired
-    public PostRestController(PostRepository postRepository, UserRepository userRepository){
-        this.postRepository= postRepository;
-        this.userRepository = userRepository;
+    public PostRestController( PostService postService){
+        this.postService = postService;
     }
 
 
     //게시글 목록
     @GetMapping("/api/postlist")
-    public List<Post> getPost(){
-        return postRepository.findAll();
+    public ResponseEntity<Page<Post>> getPost(@RequestParam(defaultValue = "0") Integer pageNo,
+                                              @RequestParam(defaultValue = "10") Integer pageSize){
+        Page<Post> items = postService.getAllItems(pageNo, pageSize);
+        return ResponseEntity.ok(items);
     }
 
     //게시글 상세페이지
     @GetMapping("/api/blog/detail/{id}")
     public Post getDetailPost(@PathVariable Long id){
-        Post post = postRepository.findById(id).orElseThrow(
-                ()->new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
-        return post;
+        return postService.getDetailPost(id);
     }
-
-
-
 
     //게시글 작성
     @PostMapping("/api/blog/write")
     public Post createPost(@RequestBody PostRequestDto postRequestDto, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        String username = userDetails.getUsername();
-
-        //로그인 한 유저의 이름을 넣을 postRequestDto.setName 이 필요.
-        postRequestDto.setNickname(username);
-        UserAccount user = userRepository.findByNickname(username).orElseThrow(
-                ()->new IllegalArgumentException("UserName 이 존재하지 않습니다."));
-
-
-
-        Post post = new Post(postRequestDto);
-        post.setUser(user);
-
-
-        return postRepository.save(post);
+        return postService.createPost(postRequestDto,userDetails);
     }
 
     //게시글 수정
     @PatchMapping("/api/blog/modify/{id}")
     public Post modifyPost (@PathVariable Long id, @RequestBody PostRequestDto postRequestDto,@AuthenticationPrincipal UserDetailsImpl userDetails){
-
-        Post post = postRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
-        if (userDetails.getUsername() != post.getNickname()){
-            throw new IllegalArgumentException("작성자만이 수정할 수 있습니다.");
-        }
-
-
-
-        post.setTitle(postRequestDto.getTitle());
-        post.setContents(postRequestDto.getContents());
-        return postRepository.save(post);
+        return  postService.modifyPost(id,postRequestDto,userDetails);
     }
     //게시글 삭제
     @DeleteMapping("/api/blog/delete/{id}")
     public boolean deletePost (@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        String name = postRepository.findById(id).get().getNickname();
-        if (userDetails.getUsername() != name){
-            throw new IllegalArgumentException("작성자만이 삭제할 수 있습니다.");
-        }
-        postRepository.deleteById(id);
-        return true;
+        return postService.deletePost(id,userDetails);
     }
 
+    //게시글 검색
+    @GetMapping("/api/postlist/search")
+    public ResponseEntity<Page<Post>> getPostsSearch(@RequestParam("p") String query,@RequestParam(defaultValue = "0") Integer pageNo,
+                                                     @RequestParam(defaultValue = "10") Integer pageSize,@RequestParam(name = "category", required = false) String category,
+                                                     @RequestParam(name = "keyword", required = false) String keyword){
+
+            Page<Post> items = postService.getPostsSearch(pageNo,pageSize,query, category);
+
+
+
+        return ResponseEntity.ok(items);
+    }
 }

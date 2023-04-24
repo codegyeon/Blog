@@ -40,10 +40,15 @@ public class SecurityConfiguration {
                 //------------------------------------------
                         // 회원 관리 처리 API 전부를 login 없이 허용
                         .antMatchers("/").permitAll()
+                        .antMatchers("/new").permitAll()
+                        .antMatchers("/new/postdetail/**").permitAll()
+                        .antMatchers("/new/signup").permitAll()
+                        .antMatchers("/new/login").permitAll()
                         .antMatchers("/postdetail/**").permitAll()
                         .antMatchers("/login/**").permitAll()
                         .antMatchers("/signup/**").permitAll()
                         .antMatchers("/api/postlist/**").permitAll()
+                        .antMatchers("/api/blog/detail/**").permitAll()
                         //그 외 나머지는 로그인으로 인증을 받아야 이용가능
                         .anyRequest().authenticated()
                 //------------------------------------------
@@ -53,9 +58,9 @@ public class SecurityConfiguration {
                 //------------------------------------------
                         //로그인 설정
                         .formLogin()
-                        .loginPage("/login")
-                        .loginProcessingUrl("/login")
-                        .defaultSuccessUrl("/")
+                        .loginPage("/new/login")
+                        .loginProcessingUrl("/new/login")
+                        .defaultSuccessUrl("/new")
                         .failureUrl("/user/login?error")
                         .permitAll()
                 //------------------------------------------

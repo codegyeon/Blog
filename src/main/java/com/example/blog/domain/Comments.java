@@ -1,11 +1,19 @@
 package com.example.blog.domain;
 
 import com.example.blog.Dto.CommentsRequestDto;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
+@Getter
+@EntityListeners(AuditingEntityListener.class)
 @Entity
 public class Comments {
 
@@ -18,6 +26,46 @@ public class Comments {
     @Column
     private String username;
 
+    // 댓글 내용
+    @Column
+    private String content;
+
+    //게시글
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id")
+    private Post post;
+
+    //유저
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private UserAccount user;
+
+    //대댓글
+    @OneToMany(mappedBy = "comments",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private List<Replies> replies = new ArrayList<>();
+
+    //생성일자
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @CreatedDate
+    @Column(nullable = false,updatable = false)
+    private LocalDateTime createdAt; // 생성일시
+
+
+    //수정일자
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @LastModifiedDate
+    @Column(nullable = false)
+    private LocalDateTime modifiedAt; // 수정일시
+
+    public List<Replies> getReplies() {
+        return replies;
+    }
+
+    public Comments() {
+    }
+
     public void setUsername(String username) {
         this.username = username;
     }
@@ -25,27 +73,6 @@ public class Comments {
     public void setContent(String content) {
         this.content = content;
     }
-
-    // 댓글 내용
-    @Column
-    private String content;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id")
-    private Post post;
-
-
-    public List<Replies> getReplies() {
-        return replies;
-    }
-
-    @OneToMany(mappedBy = "comments",cascade = CascadeType.ALL)
-    private List<Replies> replies = new ArrayList<>();
-
-
-    public Comments() {
-    }
-
     public void setPost(Post post) {
         this.post = post;
     }
@@ -55,17 +82,6 @@ public class Comments {
         this.content = content;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getContent() {
-        return content;
-    }
 
     public Comments(CommentsRequestDto commentsRequestDto,String username,Post post){
         this.content = commentsRequestDto.getContent();

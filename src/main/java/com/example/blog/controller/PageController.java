@@ -37,7 +37,9 @@ public class PageController {
     //게시글 상세 페이지
     @GetMapping("/postdetail/{id}")
     public String postdetail(@AuthenticationPrincipal UserDetailsImpl userDetails, Model model){
-        model.addAttribute("username",userDetails.getUsername());
+        if(userDetails != null){
+            model.addAttribute("username",userDetails.getUsername());
+        }
         return "postdetail";
     }
 
